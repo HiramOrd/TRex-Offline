@@ -1,0 +1,202 @@
+:root {
+    --background: #232323;
+    --alternative: #2b2b2b;
+    --light: #ffffff;
+}
+
+html {
+    font-size: 62.5%;
+    min-height: 100%;
+    display: flex;
+}
+*, *:before, *:after {
+    box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive;
+    color: var(--light);
+}
+body {
+    font-size: 1.6rem;
+    background-color: var(--background);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0;
+}
+
+header {
+    padding: 0 2rem;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;    
+    font-size: 1.2rem;
+    overflow: hidden;
+}
+header > *{
+    animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    transition: all 0.3s ease;
+} 
+header h1{
+    margin: 1rem;
+}
+header > span {
+    margin-bottom: 4rem;
+}
+
+@media only screen and (min-width: 1024px){
+    header{
+        flex-direction: row;
+        justify-content: space-between;
+        padding-top: 1.5rem;
+    }
+    header h1 {
+        order: 1;
+        font-size: 3.5rem;
+    }
+    header > span {
+        margin: 0;
+        order: 0;
+    }
+    header > div {
+        order: 2;
+    }    
+}
+
+main {
+    padding: 0 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+}
+footer {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+
+.game {
+    width: 100%;
+    max-width: 80rem;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    opacity: 0;
+}
+.ui-button {
+    background-color: transparent;
+    border: var(--light) solid 4px;
+    padding: 1rem 1.5rem;
+    margin: 0 1rem;
+    outline: none;
+    cursor: pointer;
+    animation: slide-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+.ui-button.play {
+    font-size: 3rem;
+}
+
+
+
+
+.dino-sprite {
+    width: 50px;
+}
+.game .sky{
+    flex-grow: 1;
+    /* background-color: rgb(75, 75, 75); */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+.game .floor {
+    background-color: var(--alternative);
+    height: 30px;
+}
+
+.floating {
+    animation: floating 1s infinite;
+}
+@keyframes floating {
+    0%{
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.1);
+    }    
+}
+
+.jump {
+    animation: jump 0.6s ease;
+}
+@keyframes jump {
+    0%{
+        transform: translateY(0px);
+    }
+
+    40% {
+        transform: translateY(-100px);
+    }  
+
+    100% {
+        transform: translateY(0px);
+    }    
+}
+
+.close {
+    animation: slide-out-bottom 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+}
+@keyframes slide-out-bottom {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(1000px);
+      opacity: 0;
+      position: fixed;
+    }
+  }
+
+  @keyframes slide-in-bottom {
+    0% {
+      transform: translateY(1000px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-top {
+    0% {
+      transform: translateY(-1000px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .scale-in-center {
+    animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  }
+  @keyframes scale-in-center {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
