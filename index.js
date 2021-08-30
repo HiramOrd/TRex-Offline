@@ -6,6 +6,7 @@ const feedButton = document.getElementsByClassName('ui-button feed')[0];
 const scoreLabel = document.getElementsByClassName('score')[0];
 const higthScoreLabel = document.getElementsByClassName('h-score')[0];
 const gameUI = document.getElementsByClassName('game')[0];
+const gameControls = document.getElementsByClassName('game-controls');
 
 
 // Variables
@@ -29,6 +30,8 @@ const keyDown = async({keyCode}) => {
         playButton.classList.remove('floating');
         playButton.classList.add('close');
         feedButton.classList.add('close');
+        gameControls[0].classList.add('mobile-mode');
+        gameControls[1].classList.add('mobile-mode');
     }
 
     if ((keyCode === 32 || keyCode === 38) && !dino.className.includes('jump')) {
@@ -91,7 +94,10 @@ setTimeout(() => {
 
 
 // Events
-window.addEventListener("keydown", keyDown);
+window.addEventListener("click", keyDown);
 gameUI.addEventListener("click", () => keyDown({keyCode: 32}));
 window.addEventListener("keyup", keyUp);
 playButton.addEventListener("click", () => {keyDown({keyCode: 32})});
+gameControls[0].addEventListener("click", () => {keyDown({keyCode: 32})});
+gameControls[1].addEventListener("mousedown", () => {keyDown({keyCode: 40})});
+gameControls[1].addEventListener("mouseup", () => {keyUp({keyCode: 40})});

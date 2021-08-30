@@ -121,6 +121,14 @@ footer {
 .ui-button.play {
     font-size: 3rem;
 }
+.game-controls{
+    display: none;
+}
+@media only screen and (max-width: 768px){
+    .mobile-mode {
+        display: block;
+    }
+}
 
 
 
