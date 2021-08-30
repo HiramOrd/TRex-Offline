@@ -69,7 +69,7 @@ main {
     bottom: 0.4rem;
     left: 0;
     height: 50px;
-    margin-left: 5%;
+    margin-left: 20px;
 }
 .game {
     width: 100%;
@@ -109,6 +109,9 @@ main {
     background-position: bottom;
     width: 50px;
     height: 105px;
+}
+.pause {
+    animation-play-state: paused;
 }
 
 

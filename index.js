@@ -30,7 +30,16 @@ const getRndInteger = (min, max) => {
   }
 
 const keyDown = async({keyCode}) => {
-    // console.log(keyCode);
+
+    if ((keyCode === 32 || keyCode === 38) && !dino.className.includes('jump')) {
+        dino['src'] = './data/dino.png';
+        dino.classList.add('jump');
+        await sleep(500);
+        if(dino.className.includes('jump')) {
+            dino.classList.remove('jump');
+            dino['src'] = './data/dino.png';
+        }
+    }
 
     if(playing === false && (keyCode === 32 || keyCode === 38)) {
         setTimeout(() => {
@@ -46,16 +55,6 @@ const keyDown = async({keyCode}) => {
         gameControls[1].classList.add('mobile-mode');
     }
 
-    if ((keyCode === 32 || keyCode === 38) && !dino.className.includes('jump')) {
-        dino['src'] = './data/dino.png';
-        dino.classList.add('jump');
-        await sleep(500);
-        if(dino.className.includes('jump')) {
-            dino.classList.remove('jump');
-            dino['src'] = './data/dino.png';
-        }
-    }
-
     else if(keyCode === 40) {
         dino.classList.remove('jump');
         duck = true;
@@ -68,23 +67,30 @@ const keyUp = ({keyCode}) => {
 };
 
 const newCact = () => {
-    let rand;
-    if(speed >= 2.5 || (speed <= 2.5 && score > 1000)) 
-        rand = getRndInteger(2, 5) * 100 * speed ;
-
-    else
-        rand = getRndInteger(3, 5) * 100 * speed ;
-
-    var cact = document.createElement("div");
-    cact.classList.add('cact');
-    setTimeout( () => {
-        ground.appendChild(cact);
-        cact.setAttribute('style', `animation: cact-move ${speed}s linear both;`);
-        newCact();  
-        setTimeout(() => {
-            ground.removeChild(cact);
-        }, 3500);
-    }, rand);
+    if(playing){
+        let rand;
+        if(speed >= 2.5 || (speed <= 2.5 && score > 1000)) 
+            rand = getRndInteger(2, 5) * 100 * speed ;
+    
+        else
+            rand = getRndInteger(3, 5) * 100 * speed ;
+    
+        let cact = document.createElement("div");
+        cact.classList.add('cact');
+    
+        setTimeout( () => {
+            if(playing) {
+                ground.appendChild(cact);
+                cact.setAttribute('style', `animation: cact-move ${speed}s linear both;`);
+                newCact();  
+                setTimeout(() => {
+                    try {
+                        // ground.removeChild(cact);
+                    } catch (error) {}
+                }, 3500);
+            }
+        }, rand);
+    }
 };
 
 
@@ -109,6 +115,26 @@ setInterval(() => {
         else if(!dino.className.includes('jump'))
             dino['src'] = `./data/dinoR${spritesCounter}.png`;  
 
+        let cactP = document.getElementsByClassName('cact');
+        let cactArray = [...cactP];
+
+        if(cactArray.length>0) {
+            cactArray.forEach(cact => {
+                const coord = cact.getBoundingClientRect();
+                if((coord.x < 80 && coord.x > 55) && !dino.className.includes('jump')) {
+                    playing = false; 
+                    if(score > hScore){
+                        localStorage.setItem('hScore', score);
+                    }
+                    score = 0;
+                    dino['src'] = `./data/dinoDied.png`;
+                    ground.removeAttribute('style');
+                    cactArray.forEach(cact => {
+                        cact.parentElement.removeChild(cact);
+                    });
+                }
+            });            
+        }
     }      
 }, 100);
 
