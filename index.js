@@ -94,7 +94,7 @@ setTimeout(() => {
 
 
 // Events
-window.addEventListener("click", keyDown);
+window.addEventListener("keydown", keyDown);
 gameUI.addEventListener("click", () => keyDown({keyCode: 32}));
 window.addEventListener("keyup", keyUp);
 playButton.addEventListener("click", () => {keyDown({keyCode: 32})});
