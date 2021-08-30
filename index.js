@@ -99,5 +99,5 @@ gameUI.addEventListener("click", () => keyDown({keyCode: 32}));
 window.addEventListener("keyup", keyUp);
 playButton.addEventListener("click", () => {keyDown({keyCode: 32})});
 gameControls[0].addEventListener("click", () => {keyDown({keyCode: 32})});
-gameControls[1].addEventListener("mousedown", () => {keyDown({keyCode: 40})});
-gameControls[1].addEventListener("mouseup", () => {keyUp({keyCode: 40})});
+gameControls[1].addEventListener("touchstart", () => {keyDown({keyCode: 40})});
+gameControls[1].addEventListener("touchend", () => {keyUp({keyCode: 40})});
