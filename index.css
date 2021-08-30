@@ -86,9 +86,11 @@ main {
 }
 .sky{
     height: 100%;
+    position: relative;
 }
 .ground{
     position: absolute;
+    overflow: hidden;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -96,6 +98,17 @@ main {
     background-repeat: repeat-x;
     background-position: 0px 100%;
     background-image: url('./data/ground.png');
+}
+.cact {
+    position: absolute;
+    bottom: 0;
+    right: -40px;
+    background-image: url('./data/cact.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom;
+    width: 50px;
+    height: 105px;
 }
 
 
@@ -216,5 +229,11 @@ footer {
   @keyframes ground-move {
     to {
       background-position: -1178px 100%;
+    }
+  }
+
+  @keyframes cact-move {
+    to {
+      transform: translateX(-1178px);
     }
   }

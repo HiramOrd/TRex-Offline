@@ -1,12 +1,14 @@
 // HTML
-const dino = document.getElementsByClassName('dino-sprite')[0];
 const playButton = document.getElementsByClassName('ui-button play')[0];
-const ground = document.getElementsByClassName('ground')[0];
 const feedButton = document.getElementsByClassName('ui-button feed')[0];
+const gameControls = document.getElementsByClassName('ui-button game-controls');
+
 const scoreLabel = document.getElementsByClassName('score')[0];
 const higthScoreLabel = document.getElementsByClassName('h-score')[0];
+
 const gameUI = document.getElementsByClassName('game')[0];
-const gameControls = document.getElementsByClassName('game-controls');
+const dino = document.getElementsByClassName('dino-sprite')[0];
+const ground = document.getElementsByClassName('ground')[0];
 
 
 // Variables
@@ -14,22 +16,30 @@ let playing = false;
 let duck = false;
 let spritesCounter = 1;
 let score = 0;
-let speed = 5;
+let speed = 4;
 let hScore = (localStorage.getItem('hScore')) ? localStorage.getItem('hScore') : 0 ;
+
+let randomNumber = 1000;
 
 
 // Methods
 const sleep = async(ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+const getRndInteger = (min, max) => {
+    return Math.floor(Math.random() * (max - min) ) + min;
+  }
+
 const keyDown = async({keyCode}) => {
-    console.log(keyCode);
+    // console.log(keyCode);
 
     if(playing === false && (keyCode === 32 || keyCode === 38)) {
+        newCact();
         playing = true;
         ground.setAttribute('style', `animation: ground-move ${speed}s 0.6s infinite linear both;`);
         playButton.classList.remove('floating');
         playButton.classList.add('close');
         feedButton.classList.add('close');
+        await sleep(500);
         gameControls[0].classList.add('mobile-mode');
         gameControls[1].classList.add('mobile-mode');
     }
@@ -53,6 +63,26 @@ const keyDown = async({keyCode}) => {
 const keyUp = ({keyCode}) => {
     if(keyCode === 40)
         duck = false;
+};
+
+const newCact = () => {
+    let rand;
+    if(speed >= 2.5 || (speed <= 2.5 && score > 1000)) 
+        rand = getRndInteger(2, 5) * 100 * speed ;
+
+    else
+        rand = getRndInteger(3, 5) * 100 * speed ;
+
+    var cact = document.createElement("div");
+    cact.classList.add('cact');
+    setTimeout( () => {
+        ground.appendChild(cact);
+        cact.setAttribute('style', `animation: cact-move ${speed}s linear both;`);
+        newCact();  
+        setTimeout(() => {
+            ground.removeChild(cact);
+        }, 3500);
+    }, rand);
 };
 
 
@@ -81,7 +111,7 @@ setInterval(() => {
 }, 100);
 
 setInterval(() => {
-    if(speed>1.5 && playing) {
+    if(speed>=2.1 && playing) {
         speed -= 0.4;
         ground.setAttribute('style', `animation: ground-move ${speed}s infinite linear both;`);
     }
