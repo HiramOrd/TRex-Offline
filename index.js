@@ -33,7 +33,9 @@ const keyDown = async({keyCode}) => {
     // console.log(keyCode);
 
     if(playing === false && (keyCode === 32 || keyCode === 38)) {
-        newCact();
+        setTimeout(() => {
+            newCact();
+        }, 1000);
         playing = true;
         ground.setAttribute('style', `animation: ground-move ${speed}s 0.6s infinite linear both;`);
         playButton.classList.remove('floating');
