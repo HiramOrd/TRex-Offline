@@ -102,7 +102,7 @@ main {
 .cact {
     position: absolute;
     bottom: 0;
-    right: -40px;
+    right: -100px;
     background-image: url('./data/cact.png');
     background-repeat: no-repeat;
     background-size: contain;
@@ -110,10 +110,6 @@ main {
     width: 50px;
     height: 105px;
 }
-.pause {
-    animation-play-state: paused;
-}
-
 
 
 
@@ -160,23 +156,6 @@ footer {
 
     25% {
         transform: scale(1.1);
-    }    
-}
-
-.jump {
-    animation: jump 0.5s linear;
-}
-@keyframes jump {
-    0%{
-        transform: translateY(0px);
-    }
-
-    40% {
-        transform: translateY(-130px);
-    }  
-
-    100% {
-        transform: translateY(0px);
     }    
 }
 
@@ -232,11 +211,5 @@ footer {
   @keyframes ground-move {
     to {
       background-position: -1178px 100%;
-    }
-  }
-
-  @keyframes cact-move {
-    to {
-      transform: translateX(-1178px);
     }
   }

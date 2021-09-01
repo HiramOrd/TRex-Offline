@@ -1,102 +1,149 @@
-// HTML
+// UI HTML
 const playButton = document.getElementsByClassName('ui-button play')[0];
 const feedButton = document.getElementsByClassName('ui-button feed')[0];
+const resetButton = document.getElementsByClassName('ui-button reset')[0];
 const gameControls = document.getElementsByClassName('ui-button game-controls');
-
 const scoreLabel = document.getElementsByClassName('score')[0];
 const higthScoreLabel = document.getElementsByClassName('h-score')[0];
 
+// Assets HTML
 const gameUI = document.getElementsByClassName('game')[0];
 const dino = document.getElementsByClassName('dino-sprite')[0];
 const ground = document.getElementsByClassName('ground')[0];
 
 
 // Variables
+const jumpHeigth = 110;
 let playing = false;
-let duck = false;
+let gameOverBoolean = false;
 let spritesCounter = 1;
 let score = 0;
-let speed = 4;
 let hScore = (localStorage.getItem('hScore')) ? localStorage.getItem('hScore') : 0 ;
+let speed = 4;
+let duck = false;
+let jumpPosition = 0;
 
-let randomNumber = 1000;
+// Set Higth score
+higthScoreLabel.textContent = hScore.toString().padStart(5,"0");
 
-
-// Methods
+// Await method
 const sleep = async(ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+// Random method
 const getRndInteger = (min, max) => {
     return Math.floor(Math.random() * (max - min) ) + min;
-  }
+};
 
-const keyDown = async({keyCode}) => {
+// GameOver setting
+const gameOver = () => {
+    playing = false; 
+    gameOverBoolean = true;
+    dino['src'] = `./data/dinoDied.png`;
 
-    if ((keyCode === 32 || keyCode === 38) && !dino.className.includes('jump')) {
-        dino['src'] = './data/dino.png';
-        dino.classList.add('jump');
-        await sleep(500);
-        if(dino.className.includes('jump')) {
-            dino.classList.remove('jump');
-            dino['src'] = './data/dino.png';
+    if(score > hScore)
+        localStorage.setItem('hScore', score);
+};
+
+// Dino jump action/animation
+const jumpDino = async() => {
+    dino['src'] = './data/dino.png';
+    jumpPosition = jumpHeigth;
+    dino.style.bottom = jumpPosition + 'px';
+    await sleep(500);
+    jumpPosition = 0;
+    dino.style.bottom = jumpPosition + 'px';
+};
+
+// Cact move action/animation
+const cactMove = (cact) => {
+    let cactPosition = 700;
+
+    const cactInterval = setInterval(() => {
+        if(cactPosition < -100 ) {
+            clearInterval(cactInterval);
+            cact.parentElement.removeChild(cact);
         }
-    }
+        else if (playing === false) 
+            clearInterval(cactInterval);
+        
+        else if((cactPosition<60 && cactPosition>0 ) && jumpPosition === 0)
+           gameOver();
+        
+        cactPosition -= speed;
+        cact.style.left = cactPosition + 'px';
+    }, 20);    
+} ;
 
-    if(playing === false && (keyCode === 32 || keyCode === 38)) {
-        setTimeout(() => {
-            newCact();
-        }, 1000);
-        playing = true;
-        ground.setAttribute('style', `animation: ground-move ${speed}s 0.6s infinite linear both;`);
-        playButton.classList.remove('floating');
-        playButton.classList.add('close');
-        feedButton.classList.add('close');
-        await sleep(500);
-        gameControls[0].classList.add('mobile-mode');
-        gameControls[1].classList.add('mobile-mode');
-    }
-
-    else if(keyCode === 40) {
-        dino.classList.remove('jump');
-        duck = true;
-    }
-};
-
-const keyUp = ({keyCode}) => {
-    if(keyCode === 40)
-        duck = false;
-};
-
+// Add new cact
 const newCact = () => {
     if(playing){
-        let rand;
-        if(speed >= 2.5 || (speed <= 2.5 && score > 1000)) 
-            rand = getRndInteger(2, 5) * 100 * speed ;
+        const rand = (speed >= 2.5 || (speed <= 2.5 && score > 1000)) ?
+            getRndInteger(2, 5) * 100 * speed : getRndInteger(3, 5) * 100 * speed;
     
-        else
-            rand = getRndInteger(3, 5) * 100 * speed ;
-    
-        let cact = document.createElement("div");
+        const cact = document.createElement("div");
         cact.classList.add('cact');
+        ground.appendChild(cact);
+
+        cactMove(cact);
     
         setTimeout( () => {
-            if(playing) {
-                ground.appendChild(cact);
-                cact.setAttribute('style', `animation: cact-move ${speed}s linear both;`);
-                newCact();  
-                setTimeout(() => {
-                    try {
-                        // ground.removeChild(cact);
-                    } catch (error) {}
-                }, 3500);
-            }
+            newCact();  
         }, rand);
     }
 };
 
 
-// Main
-higthScoreLabel.textContent = hScore.toString().padStart(5,"0");
+// Controls configuration
+const keyDown = async({keyCode}) => {
 
+    // Analyzing stopped game
+    if(playing === false) {
+
+        // Reset Game
+        if( gameOverBoolean === true) {
+            resetButton.click();
+        }
+
+        // Start Game
+        else if(keyCode === 32 || keyCode === 38){
+            // Configurations
+            playing = true;
+            jumpDino();
+
+            // Obstacles
+            setTimeout(() => {
+                newCact();
+            }, 500);
+            
+            // UI
+            playButton.classList.remove('floating');
+            playButton.classList.add('close');
+            feedButton.classList.add('close');
+            await sleep(500);
+            gameControls[0].classList.add('mobile-mode');
+            gameControls[1].classList.add('mobile-mode');
+        }
+            
+    }
+
+    //Jump
+    else if ((keyCode === 32 || keyCode === 38) && jumpPosition === 0) {
+        jumpDino();
+    }
+
+    //Duck
+    else if(keyCode === 40) {
+        duck = true;
+    }
+};
+
+// Disable duck
+const keyUp = ({keyCode}) => {
+    if(keyCode === 40)
+        duck = false;
+};
+
+// Sprites configuration
 setInterval(() => {
     spritesCounter = (spritesCounter === 1) ? 2 : 1;
 
@@ -112,39 +159,18 @@ setInterval(() => {
         if(duck)
             dino['src'] = `./data/dinoD${spritesCounter}.png`;
 
-        else if(!dino.className.includes('jump'))
+        else if(jumpPosition === 0)
             dino['src'] = `./data/dinoR${spritesCounter}.png`;  
-
-        let cactP = document.getElementsByClassName('cact');
-        let cactArray = [...cactP];
-
-        if(cactArray.length>0) {
-            cactArray.forEach(cact => {
-                const coord = cact.getBoundingClientRect();
-                if((coord.x < 80 && coord.x > 55) && !dino.className.includes('jump')) {
-                    playing = false; 
-                    if(score > hScore){
-                        localStorage.setItem('hScore', score);
-                    }
-                    score = 0;
-                    dino['src'] = `./data/dinoDied.png`;
-                    ground.removeAttribute('style');
-                    cactArray.forEach(cact => {
-                        cact.parentElement.removeChild(cact);
-                    });
-                }
-            });            
-        }
     }      
 }, 100);
 
+// Speed increase
 setInterval(() => {
-    if(speed>=2.1 && playing) {
+    if(speed>=2.1 && playing)
         speed -= 0.4;
-        ground.setAttribute('style', `animation: ground-move ${speed}s infinite linear both;`);
-    }
 }, 10000);
 
+// Page presentation
 setTimeout(() => {
     playButton.classList.add('floating');
     gameUI.classList.add('scale-in-center');
