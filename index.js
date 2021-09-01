@@ -18,6 +18,8 @@ var jumpSound = new Audio('./data/JumpSound.mp3');
 var gameOverSound = new Audio('./data/gameOverSound.mp3');
 var oneHundredSound = new Audio('./data/100sound.mp3');
 
+const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+
 // Variables
 const jumpHeigth = 120;
 const jumpSpeed = 10;
@@ -32,7 +34,7 @@ let groundPosition = 0;
 let duck = false;
 let jumpPosition = 0;
 let jumpState = 0;
-const fps = 60;
+const fps = (isFirefox) ? 120 : 60;
 let intervalLapse = 1000 / fps;
 
 // Set Higth score
