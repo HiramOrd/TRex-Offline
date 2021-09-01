@@ -32,6 +32,8 @@ let groundPosition = 0;
 let duck = false;
 let jumpPosition = 0;
 let jumpState = 0;
+const fps = 60;
+let intervalLapse = 1000 / fps;
 
 // Set Higth score
 higthScoreLabel.textContent = hScore.toString().padStart(5,"0");
@@ -73,7 +75,7 @@ const jumpDino = () => {
             jumpState = 0;
         }     
         else if (jumpPosition >= jumpHeigth) jumpState = 1;
-    }, 20);
+    }, intervalLapse);
 };
 
 const duckDino = () => {
@@ -100,7 +102,7 @@ const cactMove = (cact) => {
         
         cactPosition -= speed;
         cact.style.left = cactPosition + 'px';
-    }, 20);    
+    }, intervalLapse);    
 } ;
 
 // Add new cact
@@ -181,7 +183,7 @@ const groundMove = setInterval(() => {
     }
     else if (gameOverBoolean)
         clearInterval(groundMove);
-}, 20);
+}, intervalLapse);
 
 // Sprites configuration
 setInterval(() => {
