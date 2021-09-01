@@ -11,6 +11,7 @@ const higthScoreLabel = document.getElementsByClassName('h-score')[0];
 const gameUI = document.getElementsByClassName('game')[0];
 const dino = document.getElementsByClassName('dino-sprite')[0];
 const ground = document.getElementsByClassName('ground')[0];
+const sky = document.getElementsByClassName('sky')[0];
 
 
 // Variables
@@ -23,6 +24,7 @@ let spritesCounter = 1;
 let score = 0;
 let hScore = (localStorage.getItem('hScore')) ? localStorage.getItem('hScore') : 0 ;
 let speed = 4;
+let groundPosition = 0;
 let duck = false;
 let jumpPosition = 0;
 let jumpState = 0;
@@ -98,11 +100,12 @@ const cactMove = (cact) => {
 // Add new cact
 const newCact = () => {
     if(playing){
-        const rand = (speed >= 2.5 || (speed <= 2.5 && score > 1000)) ?
-            getRndInteger(2, 5) * 100 * speed : getRndInteger(3, 5) * 100 * speed;
+        const rand = getRndInteger(2, 6) * (300 - speed*2);
     
         const cact = document.createElement("div");
         cact.classList.add('cact');
+        if (rand%2 > 0) 
+            cact.style.width = '23px';
         ground.appendChild(cact);
 
         cactMove(cact);
@@ -164,6 +167,16 @@ const keyUp = ({keyCode}) => {
         jumpState = 0;
 };
 
+const groundMove = setInterval(() => {
+    if(playing) {
+        groundPosition -= speed;
+        ground.style.backgroundPosition = groundPosition + 'px 100%';
+        sky.style.backgroundPosition = groundPosition/5 + 'px 100%'
+    }
+    else if (gameOverBoolean)
+        clearInterval(groundMove);
+}, 20);
+
 // Sprites configuration
 setInterval(() => {
     spritesCounter = (spritesCounter === 1) ? 2 : 1;
@@ -187,9 +200,9 @@ setInterval(() => {
 
 // Speed increase
 setInterval(() => {
-    if(speed>=2.1 && playing)
-        speed -= 0.4;
-}, 10000);
+    if(speed<=20 && playing)
+        speed += 0.4;
+}, 3000);
 
 // Page presentation
 setTimeout(() => {
