@@ -110,7 +110,9 @@ main {
     width: 50px;
     height: 105px;
 }
-
+.game-over{
+    display: none;
+}
 
 
 footer {
