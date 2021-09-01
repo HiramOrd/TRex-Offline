@@ -19,6 +19,7 @@ html {
     box-sizing: border-box;
     font-family: 'Press Start 2P', cursive;
     color: var(--light);
+    user-select: none;
 }
 body {
     flex-grow: 1;
@@ -132,7 +133,6 @@ footer {
     outline: none;
     cursor: pointer;
     animation: slide-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    user-select: none;
 }
 .ui-button.play {
     font-size: 3rem;

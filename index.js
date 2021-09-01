@@ -13,6 +13,10 @@ const dino = document.getElementsByClassName('dino-sprite')[0];
 const ground = document.getElementsByClassName('ground')[0];
 const sky = document.getElementsByClassName('sky')[0];
 
+// Audio
+var jumpSound = new Audio('./data/JumpSound.mp3');
+var gameOverSound = new Audio('./data/gameOverSound.mp3');
+var oneHundredSound = new Audio('./data/100sound.mp3');
 
 // Variables
 const jumpHeigth = 120;
@@ -43,6 +47,7 @@ const getRndInteger = (min, max) => {
 // GameOver setting
 const gameOver = () => {
     playing = false; 
+    gameOverSound.play();
     gameOverBoolean = true;
     gameOverLabel.classList.remove('game-over');
     dino['src'] = `./data/dinoDied.png`;
@@ -54,6 +59,7 @@ const gameOver = () => {
 // Dino jump action/animation
 const jumpDino = () => {
     dino['src'] = './data/dino.png';
+    jumpSound.play();
     let dinoJumpAnimation = setInterval(() => {
         if(jumpState === 0)
             jumpPosition += jumpSpeed;
@@ -119,7 +125,6 @@ const newCact = () => {
 
 // Controls configuration
 const keyDown = async({keyCode}) => {
-
     // Analyzing stopped game
     if(playing === false) {
 
@@ -162,9 +167,10 @@ const keyDown = async({keyCode}) => {
 
 // Disable duck
 const keyUp = ({keyCode}) => {
-    if(keyCode === 40)
+    if(keyCode === 40) {
         duck = false;
         jumpState = 0;
+    }
 };
 
 const groundMove = setInterval(() => {
@@ -184,6 +190,8 @@ setInterval(() => {
     if(playing) {
         
         score++;
+        if(score%100 === 0)
+            oneHundredSound.play();
         const actualScore = score.toString().padStart(5,"0");
         scoreLabel.textContent = actualScore;
 
@@ -213,7 +221,7 @@ setTimeout(() => {
 
 // Events
 window.addEventListener("keydown", keyDown);
-gameUI.addEventListener("click", () => keyDown({keyCode: 32}));
 window.addEventListener("keyup", keyUp);
+gameUI.addEventListener("click", () => keyDown({keyCode: 32}));
 playButton.addEventListener("click", () => {keyDown({keyCode: 32})});
 gameControls[0].addEventListener("click", () => {keyDown({keyCode: 32})});
